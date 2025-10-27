@@ -1,0 +1,52 @@
+<body>
+  <pre>
+    1957 IRE TRANSACTIONS ON ELECTRONIC COMPUTERS 5
+The Logical Design of a Simple General Purpose Computer*
+STANLEY P. FRANKELt
+
+  Summary - The logical design described here is used in MINAC, partially constructed at the California Institute of Technology, and LGP-30, manufactured by Librascope Inc. These serial binary digital computers make use of magnetic drum bulk storage and use three circulating registers and fifteen flip flops. The procedures used in performing the sixteen elementary operations are described. These descriptions indicate the circumstances in which each flip-flop or circulating register input is activated. The Boolean algebraic equations summarizing these circumstances constitute the logical design.
+
+INTRODUCTION
+
+THE LOGICAL design described here was largely composed in the course of work of the Digital Computing Group of the California Institute of Technology. A breadboard model of a computer based this logical design, called MINAC, was completed at C.I.T. in 1954 and served to check much of the design. A production version of this machine, called the LGP-30, has been completed by Librascope Inc. of Glendale, Calif. Although MINAC and LGP-30 differ in a few details of logical design the present description is substantially correct for either.
+  The LGP-30 has been discussed in two previous publications. One' describes its elementary operations and the ways in which these are used to perform complex calculations. The other2 discussed the useful range of applications of magnetic drum computers in general, with particular reference to LGP-30. It is the purpose of the present paper to present in almost complete de￾tail the logical design structure held in common by MINAC and LGP-30. Their constructional techniques and methods of arithmetic manipulation are described only to the extenlt necessary to this purpose.
+
+CONSTRUCTIONAL TECHNIQUES
+
+  The primary memory device of MINAC is a magnetic drum. Information is held on the drum in three forms. The bulk memory is held in 64 tracks, each served by one "head" which records data in it and can subsequently read the recorded data. The information recorded in each track consists of 64 words, each of 32 bits (binary digits). A second type of memory of shorter access time is provided by three circulating registers, each consisting of a recording head and one or more reading heads following it (in the sense of drum rotation) in the same track. The time during which the 32 bits of a word are presented by a head of the bulk memory is called a word period. The time elapsing between the recording of a digit in a circulating register and its presentation by a reading head is about 32 digit periods so as to permit recirculation of information in one word period. The third form of information storage on the drum is represented by the timing tracks. Each of these is served by a single reading head which reads permanently recorded information determined only by the angular position of of the drum. The digits presented by three timing tracks are combined to form various timing signals, denoted t, u, v, x, y, z. These are shown in Fig. 1.
+
+
+Fig. 1 - Signals derived from the timing tracks.
+
+  Information which must be presented continuously over many digit periods is held in toggles (flip-flop circuits). Each of these can be set to one or the other of two stable states, designated 1 and 0, at the end of each digit period. The logical design consists primarily of the specification of the circumstances under which each toggle is set to 1 or to 0. If neither input is activated the toggle retains its prior setting during the next digit period. The logical design also specifies the digit recorded in each circulating register in each digit period and whether a digit is to be recorded in the bulk memory and, if so, what digit and in which track.
+  The input and output of data are mediated by a Flexowriter, a punched paper tape controlled typewriter. In the input process each character read from the tape sets some of the MINAC toggles. In output the state of the toggles controls the firing of a set of thyratrons which effect the closure of relays by which the Flexowriter is operated.
+
+TODO footnotes
+
+6 IRE TRAlNSACTIONS ON ELECTRONIC COMPUTERS March
+
+  The logical design is realized by a logical network, composed primarily of resistors and crystal diodes Its inputs are the settings of the toggles expressing the present internal state of the computer proper (as distinct from the memory held on the drum) as well as the digits being presenited by the timinig tracks, circulating registers, and bulk memory of the drum. Its outputs go to the recording heads of the circulating registers, to the selected head of the bulk memory (if a recording operation is in progress), to the inputs which set the toggles for the lnext digit period, and to the Flexowriter thyratrons. Each input or output is, for each digit period, a binary (Boolean) variable. Each input variable is presented in duplicate, e.g., by wires from the two sides of the toggle. This facilitates the expression of the logical design primarily by the monotonic Boolean functions And and (nonexclusive) Or that are easily realized by diode networks.
+
+  FUNCTIONAL DESIGN
+
+  The action of MINAC consists of a series of elementary operations, each performed upon one word of its memory and determined by one instruction word. An instruction word holds an order indicating the operation to be performed anid one address identifying the word of the memory involved in the operation. Instructions held in successively numbered memory locations are normally obeyed in succession. Exceptions to this rule occur for "control transfer" instructions which specify the address at which the next instruction is to be sought. One circulating register, the counter, primarily recirculates the address in which the next instruction is to be found. As an instruction is read from the memory it is recorded in the instruction register where it is retained to direct the execution of that instruction.
+  The third circulating register, the accumulator, holds a number - usually the result of the last arithmetic operation. In an arithmetic operation the number held in the accuimulator is combined with a number drawn from the bulk memory and the result retained in the accumulator. The accumulator normally recirculates with a period of one word period, like the counter and instruction register. During the performance of a multiplication or division the capacity of the accumulator is increased to two word periods by the use of a second reading head.
+  Sixteen elementary operations are provided, as shown in Table I. The arithmetic operations act upon signed (algebraic) numbers, represented in binary expansion as described below.
+
+REQUIREMENTS FOR CONTINUOUS MEMORY
+
+  Several phases of the operation of thle computer, each terminated at the end of a word period, are to be distinguished: in phase 1 (abbreviated f1) the instruction next to be obeyed is sought. This requires selecting the appropriate track and waiting for the desired word in that track to appear. In f2 which occupies just one word period the instruction word is set into the instruction register. In q3 the operand word (i.e., the word in the bulk memory designated by the address then held in the instruction register) is sought by a process similar to that of f1. In f4, which lasts for one word period, the operation is executed, except for the prolonged operations, multiplication and division. For these the execution extends into phases 5, 6, 7, and 8. These extend the time for execution somewhat beyond the time for one drum revolution.
+  Except in prolonged operations the phases are distinguished by two toggles, named F and G. Phases 5 to 8 are distinguished from phases 1 to 4 by the use of a third toggle, H.
+
+  While an instruction or an operand word is being read (or written) the appropriate track of the bulk memory must be selected. Six toggles, named P1, P2, . . . , P6, perform this selection. They are set serially during phases 1 and 3, then remain unchanged during the word period in which the track selection must be exercised.
+  In a similar fashion, the order must be continuously in evidence during phases 4 to 8. Since 16 = 2^4 orders are to be distinguished, four toggles suffice to mark them. They are denoted Ql, Q2, QG, Q4. 
+  Two more toggles are used, K and L. The primary duty of L is to hold carry digits in addition and subtraction processes. (Since these operations are performed serially, only one carry bit need be "remembered" in each digit period.) The search operations of phases 1 and 3 are performed with the help of toggle K, as described below.
+  During the execution of a multiplication or division (after f4 in which the mLultiplicand or divisor is read into the instruction register) there are additional requirements for continuous memory. These requirements are met by the P toggles, which after f4 are not needed in their track selecting capacity. The functions of the toggles are summarized in Table II.
+
+THE DEVELOPMENT OF THE LOGICAL DESIGN
+
+  Except for the occurrence of prolonged operations, H stays in its 0 state, as indicated by the symbol H. The first four phases are distinguished by the four states F and G, as follows:
+
+
+  </pre>
+</body>
